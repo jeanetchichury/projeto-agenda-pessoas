@@ -1,4 +1,4 @@
-package com.agenda.pessoas.Exception;
+package com.agenda.pessoas.exception;
 
 public class NotFoundException extends RuntimeException{
     public NotFoundException(String message){

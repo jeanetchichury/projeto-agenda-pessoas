@@ -1,38 +1,54 @@
 package com.agenda.pessoas.controller;
 
-import com.agenda.pessoas.Exception.BadRequestException;
-import com.agenda.pessoas.Exception.NotFoundException;
+import com.agenda.pessoas.exception.BadRequestException;
+import com.agenda.pessoas.exception.NotFoundException;
 import com.agenda.pessoas.entity.Pessoa;
-import org.springframework.validation.annotation.Validated;
+import com.agenda.pessoas.request.PessoaUpdateRequest;
+import com.agenda.pessoas.service.PessoaService;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.hibernate.mapping.Any;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/pessoas")
+@AllArgsConstructor
 public class PessoasController {
-    @GetMapping("/")
-    public String getAll(){
-        return "deu bom!" ;
+
+    private PessoaService service;
+
+    @GetMapping()
+    public Page<Pessoa> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
+        return (Page<Pessoa>) service.getAllPessoas(page, size);
     }
 
+//    @GetMapping("/cep")
+//    public Any getEndereco(@RequestParam String cep){
+//        return service.getEndereco(cep);
+//    }
+
     @GetMapping("/{id}")
-    public String getById(@PathVariable Long id) throws NotFoundException {
-        return "service.getById(id)";
+    public Optional<Pessoa> getById(@PathVariable Long id) throws NotFoundException {
+        return service.findPessoaById(id);
     }
 
     @PostMapping
-    public Pessoa create(@Validated @RequestBody Pessoa pessoa) throws BadRequestException {
-        Pessoa infos = pessoa;
-        return infos;
+    public Pessoa create(@Valid @RequestBody Pessoa pessoa) throws BadRequestException {
+        return service.createPessoa(pessoa);
     }
 
     @PutMapping("/{id}")
-    public Pessoa update(@PathVariable Long id, @RequestBody Pessoa pessoa){
-        return pessoa;
+    public Pessoa update(@PathVariable Long id, @RequestBody PessoaUpdateRequest pessoa){
+        return service.updatePessoa(id, pessoa);
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id){
-        return "deletou";
+    public HttpStatus delete(@PathVariable Long id){
+        return service.deletePessoa(id);
     }
-
 }

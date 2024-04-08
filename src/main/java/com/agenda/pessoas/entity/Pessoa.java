@@ -1,41 +1,50 @@
 package com.agenda.pessoas.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.data.annotation.ReadOnlyProperty;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.NonNull;
-
 import java.util.Date;
 
+@Data
 @Entity
-@Table(name = "pessoa")
+@Table(name = "pessoas")
 public class Pessoa {
     @Id
     @ReadOnlyProperty
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Long id;
 
-    @NonNull
-    private String nome;
+    @NotBlank(message = "o nome não pode ser vazio")
+    public String nome;
 
-    @NonNull
-    private String sobrenome;
+    @NotBlank(message = "o sobrenome não pode ser vazio")
+    public String sobrenome;
 
-    @NonNull
+    @NotBlank(message = "o nome não pode ser vazio")
+    @CPF
     @Column(name = "cpf", nullable = false, unique = true, length = 11)
-    private String cpf;
+    public String cpf;
 
-    @NonNull
-    @DateTimeFormat
-    private Date nascimento;
+    @NotNull(message = "a data de nascimento não pode ser vazio")
+    public Date nascimento;
 
-    @NonNull
-    private String telefone;
+    @NotBlank(message = "o telefone não pode ser vazio")
+    public String telefone;
 
-    @NonNull
-    private String endereco;
+    @NotBlank(message = "o endereço não pode ser vazio")
+    public String endereco;
 
-    @NonNull
-    private String email;
+    @NotBlank(message = "o CEP não pode ser vazio")
+    public String cep;
+
+    @NotBlank
+    @Email(message = "precisa ser um email válido.")
+    public String email;
+
+    public Boolean ativo;
 
 }
