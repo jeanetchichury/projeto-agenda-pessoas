@@ -7,11 +7,11 @@ import com.agenda.pessoas.request.PessoaUpdateRequest;
 import com.agenda.pessoas.service.PessoaService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.hibernate.mapping.Any;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Optional;
 
 
@@ -38,7 +38,7 @@ public class PessoasController {
     }
 
     @PostMapping
-    public Pessoa create(@Valid @RequestBody Pessoa pessoa) throws BadRequestException {
+    public Pessoa create(@Valid @RequestBody Pessoa pessoa) throws BadRequestException, IOException, InterruptedException {
         return service.createPessoa(pessoa);
     }
 

@@ -6,13 +6,17 @@ import com.agenda.pessoas.entity.Pessoa;
 import com.agenda.pessoas.repository.PessoaRepository;
 import com.agenda.pessoas.request.PessoaUpdateRequest;
 import lombok.AllArgsConstructor;
-import org.hibernate.mapping.Any;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Optional;
 
 @Service
@@ -32,11 +36,32 @@ public class PessoaService {
         return repository.existsByCpf(cpf);
     }
 
-    public Pessoa createPessoa(Pessoa pessoa) throws BadRequestException {
+    public Pessoa createPessoa(Pessoa pessoa) throws BadRequestException, IOException, InterruptedException {
         String cpf = pessoa.cpf;
+        String cep = pessoa.cep;
 
         Boolean procuraDuplicidade = this.existsPessoaByCpf(cpf);
         if (procuraDuplicidade) throw new BadRequestException("CPF já cadastrado.");
+
+        String URL_GET = "http://viacep.com.br/ws/"+cep+"/json/";
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .timeout(Duration.ofSeconds(10))
+                .uri(URI.create(URL_GET))
+                .build();
+
+        HttpResponse<String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.statusCode());
+        System.out.println(response.body());
+
+        if(response.statusCode() == 400){
+            throw new BadRequestException("cep inválido");
+        }
+
+        pessoa.ativo = true;
 
         return repository.save(pessoa);
     }
@@ -73,7 +98,4 @@ public class PessoaService {
         return HttpStatus.OK;
     }
 
-//    public Any getEndereco(String cep) {
-//        String endereco = ViaCep.findCep("01001000");
-//    }
 }

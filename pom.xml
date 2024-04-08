@@ -66,11 +66,6 @@
 			<artifactId>flyway-maven-plugin</artifactId>
 			<version>10.7.1</version>
 		</dependency>
-		<dependency>
-			<groupId>com.gtbr</groupId>
-			<artifactId>via-cep</artifactId>
-			<version>1.0.0</version>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -93,11 +88,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<repositories>
-		<repository>
-			<id>repsy</id>
-			<url>https://repo.repsy.io/mvn/thalles/via-cep</url>
-		</repository>
-	</repositories>
 </project>
