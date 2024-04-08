@@ -28,7 +28,7 @@ Regras:
 
 • Todo endpoint deve possuir um token de autenticação;
 
-• Deve ser feita a validação do CEP na api ViaCEP;
+• Deve ser feita a validação do CEP na api ViaCEP ✔;
 
 • Deve ser armazenado os dados em banco Postgresql via Docker✔;
 
